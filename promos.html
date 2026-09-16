@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WeThiago — Promos</title>
+  <meta name="description" content="WeThiago · Promos · em breve." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap nav__inner">
+      <a href="index.html" class="brand">We<span class="dot">Thiago</span></a>
+      <nav class="nav__links" id="navLinks">
+        <a href="catalogo.html">Catálogo</a>
+        <a href="atendimento.html">Atendimento</a>
+        <a href="https://www.instagram.com/wethiago" target="_blank" rel="noopener">Redes</a>
+        <a href="promos.html">Promos</a>
+        <a href="game.html">Game</a>
+      </nav>
+      <button class="nav__burger" id="burger" aria-label="Abrir menu" aria-expanded="false">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="stub">
+    <div class="stub__glow"></div>
+    <div class="stub__inner">
+      <span class="eyebrow"><span class="pulse"></span> Promos</span>
+      <h1 style="margin-top:20px">As promos estão vindo <span class="accent">em breve.</span></h1>
+      <p>Drops, combos e descontos exclusivos. Ative as notificações no Telegram pra não perder nenhuma.</p>
+      <a class="btn btn--primary" href="index.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+        Voltar pra home
+      </a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <small>© <span id="year"></span> WeThiago · Entregas 24h, todos os dias.</small>
+      <a class="badge" href="https://wa.me/5500000000000" target="_blank" rel="noopener">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Z"/></svg>
+        <span>Pedir no WhatsApp<small>Aberto 24h</small></span>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const burger = document.getElementById('burger');
+    const links = document.getElementById('navLinks');
+    burger.addEventListener('click', () => {
+      const open = links.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open);
+    });
+  </script>
+</body>
+</html>
