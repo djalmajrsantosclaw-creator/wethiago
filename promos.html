@@ -4,13 +4,96 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WeThiago — Promos</title>
-  <meta name="description" content="WeThiago · Promos · em breve." />
+  <meta name="description" content="Promos WeThiago: destaque da semana, combos e descontos. Ofertas por tempo limitado, aproveite no WhatsApp." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-hero { padding: 56px 0 12px; position: relative; overflow: hidden; }
+    .page-hero__glow {
+      position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
+      width: 720px; height: 720px; max-width: 120vw;
+      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 62%);
+      pointer-events: none; z-index: 0;
+    }
+    .page-hero .wrap { position: relative; z-index: 1; }
+    .page-hero h1 {
+      font-family: var(--font-display); font-weight: 700; letter-spacing: -0.04em;
+      line-height: 0.98; font-size: clamp(2.4rem, 8vw, 4.5rem); margin: 16px 0 12px;
+    }
+    .page-hero h1 .accent { color: var(--accent); text-shadow: 0 0 60px color-mix(in srgb, var(--accent) 50%, transparent); }
+    .page-hero__tag { color: var(--fg-dim); font-size: clamp(1rem, 2.4vw, 1.25rem); max-width: 44ch; }
+    .page-hero__tag strong { color: var(--fg); font-weight: 600; }
+
+    /* Countdown */
+    .countdown { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+    .cd { text-align: center; background: var(--bg-card); border: 1px solid var(--accent-dim); border-radius: var(--radius); padding: 12px 16px; min-width: 68px; }
+    .cd__num { font-family: var(--font-display); font-weight: 700; font-size: 1.8rem; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
+    .cd__lbl { display: block; color: var(--fg-dim); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 6px; }
+
+    .section { padding: 40px 0; }
+    .sub { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; font-size: clamp(1.4rem, 4vw, 2rem); margin-bottom: 20px; }
+
+    /* Featured */
+    .feature {
+      display: grid; grid-template-columns: 220px 1fr; gap: 0; overflow: hidden;
+      border-radius: var(--radius-lg); border: 1px solid var(--accent-dim);
+      background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%), var(--bg-card);
+    }
+    .feature__art {
+      display: grid; place-items: center; font-size: 5rem;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 16%, transparent), transparent 65%);
+      border-right: 1px solid var(--accent-dim);
+    }
+    .feature__body { padding: 32px; display: flex; flex-direction: column; justify-content: center; }
+    .badge-hot {
+      align-self: flex-start; font-family: var(--font-display); font-weight: 600; font-size: 0.78rem;
+      letter-spacing: 0.06em; text-transform: uppercase; color: #04140a; background: var(--accent);
+      padding: 6px 12px; border-radius: 999px; margin-bottom: 14px;
+    }
+    .feature__name { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 4vw, 2.4rem); letter-spacing: -0.03em; }
+    .feature__desc { color: var(--fg-dim); margin-top: 8px; }
+    .feature__price { display: flex; align-items: baseline; gap: 14px; margin: 20px 0; }
+    .feature__old { color: var(--fg-dim); text-decoration: line-through; font-size: 1.2rem; }
+    .feature__new { font-family: var(--font-display); font-weight: 700; font-size: 2.4rem; color: var(--accent); }
+    .feature__new small { color: var(--fg-dim); font-weight: 500; font-size: 0.9rem; }
+
+    /* Promo grid */
+    .promo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .promo {
+      position: relative; overflow: hidden;
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius-lg);
+      padding: 24px; transition: border-color .2s, transform .2s; display: flex; flex-direction: column;
+    }
+    .promo:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .promo__tag { align-self: flex-start; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-hi); background: color-mix(in srgb, var(--accent) 12%, transparent); border: 1px solid var(--accent-dim); padding: 5px 10px; border-radius: 999px; margin-bottom: 14px; }
+    .promo__emoji { font-size: 2.2rem; margin-bottom: 10px; }
+    .promo h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.2rem; letter-spacing: -0.02em; }
+    .promo p { color: var(--fg-dim); font-size: 0.92rem; margin-top: 6px; flex: 1; }
+    .promo__price { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; color: var(--accent); margin-top: 16px; }
+    .promo__price s { color: var(--fg-dim); font-weight: 500; font-size: 0.9rem; margin-right: 6px; }
+
+    /* Final CTA */
+    .final-cta {
+      text-align: center; padding: 48px 32px; border-radius: var(--radius-lg);
+      border: 1px solid var(--accent-dim);
+      background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%), var(--bg-card);
+    }
+    .final-cta h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 5vw, 2.4rem); letter-spacing: -0.03em; }
+    .final-cta p { color: var(--fg-dim); margin: 10px 0 24px; }
+
+    @media (max-width: 860px) { .promo-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px) {
+      .feature { grid-template-columns: 1fr; }
+      .feature__art { height: 140px; border-right: 0; border-bottom: 1px solid var(--accent-dim); }
+      .promo-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
+
+  <!-- NAV -->
   <header class="nav">
     <div class="wrap nav__inner">
       <a href="index.html" class="brand">We<span class="dot">Thiago</span></a>
@@ -27,19 +110,110 @@
     </div>
   </header>
 
-  <main class="stub">
-    <div class="stub__glow"></div>
-    <div class="stub__inner">
-      <span class="eyebrow"><span class="pulse"></span> Promos</span>
-      <h1 style="margin-top:20px">As promos estão vindo <span class="accent">em breve.</span></h1>
-      <p>Drops, combos e descontos exclusivos. Ative as notificações no Telegram pra não perder nenhuma.</p>
-      <a class="btn btn--primary" href="index.html">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
-        Voltar pra home
-      </a>
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="page-hero__glow"></div>
+    <div class="wrap">
+      <span class="eyebrow"><span class="pulse"></span> Ofertas de hoje</span>
+      <h1>Ofertas de <span class="accent">hoje</span></h1>
+      <p class="page-hero__tag">Válido só <strong id="today"></strong>. As promos zeram à meia-noite — não deixa pra depois.</p>
+      <div class="countdown" id="countdown" aria-label="Tempo restante das promoções">
+        <div class="cd"><span class="cd__num" id="cd-h">00</span><span class="cd__lbl">horas</span></div>
+        <div class="cd"><span class="cd__num" id="cd-m">00</span><span class="cd__lbl">min</span></div>
+        <div class="cd"><span class="cd__num" id="cd-s">00</span><span class="cd__lbl">seg</span></div>
+      </div>
     </div>
-  </main>
+  </section>
 
+  <!-- FEATURED -->
+  <section class="section">
+    <div class="wrap">
+      <h2 class="sub">Destaque da semana</h2>
+      <div class="feature">
+        <div class="feature__art" aria-hidden="true">🌿</div>
+        <div class="feature__body">
+          <span class="badge-hot">🔥 Semana</span>
+          <h3 class="feature__name">OG Kush · 3,5 g</h3>
+          <p class="feature__desc">A queridinha da casa, agora com desconto de semana. Estoque limitado — quando acaba, acabou.</p>
+          <div class="feature__price">
+            <span class="feature__old">R$ 120</span>
+            <span class="feature__new"><small>R$</small> 89</span>
+          </div>
+          <a class="btn btn--primary" href="https://wa.me/5500000000000?text=Quero+OG+Kush+da+promo+da+semana" target="_blank" rel="noopener">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Z"/></svg>
+            Garantir o meu
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROMO GRID -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <h2 class="sub">Mais promos rolando</h2>
+      <div class="promo-grid">
+        <article class="promo">
+          <span class="promo__tag">Combo</span>
+          <div class="promo__emoji" aria-hidden="true">🍇🍋</div>
+          <h3>Combo Duplo Flores</h3>
+          <p>Purple Haze + Lemon Skunk juntos, com preço de amigo.</p>
+          <div class="promo__price"><s>R$ 145</s> R$ 119</div>
+        </article>
+        <article class="promo">
+          <span class="promo__tag">Quantidade</span>
+          <div class="promo__emoji" aria-hidden="true">🐻</div>
+          <h3>3x Gummies</h3>
+          <p>Leve 3 potes de Gummies Tropical e pague por 2. Doçura em dobro.</p>
+          <div class="promo__price"><s>R$ 210</s> R$ 140</div>
+        </article>
+        <article class="promo">
+          <span class="promo__tag">Frete grátis</span>
+          <div class="promo__emoji" aria-hidden="true">🛵</div>
+          <h3>Frete zero acima de R$ 150</h3>
+          <p>Fechou o carrinho acima de R$ 150? A entrega é por nossa conta.</p>
+          <div class="promo__price">Grátis</div>
+        </article>
+        <article class="promo">
+          <span class="promo__tag">Combo</span>
+          <div class="promo__emoji" aria-hidden="true">⚙️📄</div>
+          <h3>Kit Sessão</h3>
+          <p>Grinder de metal + Sedas King Size. Tudo o que precisa em um kit.</p>
+          <div class="promo__price"><s>R$ 92</s> R$ 75</div>
+        </article>
+        <article class="promo">
+          <span class="promo__tag">Concentrado</span>
+          <div class="promo__emoji" aria-hidden="true">✨</div>
+          <h3>Shatter em dose dupla</h3>
+          <p>2 g de Shatter Gold com 20% off. Potência premium por menos.</p>
+          <div class="promo__price"><s>R$ 280</s> R$ 224</div>
+        </article>
+        <article class="promo">
+          <span class="promo__tag">Primeira compra</span>
+          <div class="promo__emoji" aria-hidden="true">🎁</div>
+          <h3>-15% na estreia</h3>
+          <p>Primeira vez na WeThiago? Ganha 15% off em qualquer pedido.</p>
+          <div class="promo__price">-15%</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="final-cta">
+        <h2>As promos zeram à meia-noite ⏳</h2>
+        <p>Não deixa a oferta passar. Chama no WhatsApp e garante seu desconto agora.</p>
+        <a class="btn btn--primary" href="https://wa.me/5500000000000?text=Quero+aproveitar+as+promos+de+hoje" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Z"/></svg>
+          Aproveitar agora
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="wrap footer__inner">
       <small>© <span id="year"></span> WeThiago · Entregas 24h, todos os dias.</small>
@@ -58,6 +232,26 @@
       const open = links.classList.toggle('open');
       burger.setAttribute('aria-expanded', open);
     });
+
+    // Dynamic date
+    const fmt = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' });
+    document.getElementById('today').textContent = fmt.format(new Date());
+
+    // Countdown to midnight
+    const h = document.getElementById('cd-h');
+    const m = document.getElementById('cd-m');
+    const s = document.getElementById('cd-s');
+    const pad = n => String(n).padStart(2, '0');
+    function tick() {
+      const now = new Date();
+      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+      let diff = Math.max(0, Math.floor((end - now) / 1000));
+      h.textContent = pad(Math.floor(diff / 3600));
+      m.textContent = pad(Math.floor((diff % 3600) / 60));
+      s.textContent = pad(diff % 60);
+    }
+    tick();
+    setInterval(tick, 1000);
   </script>
 </body>
 </html>

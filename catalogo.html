@@ -4,13 +4,117 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WeThiago — Catálogo</title>
-  <meta name="description" content="WeThiago · Catálogo · em breve." />
+  <meta name="description" content="Catálogo WeThiago: flores, concentrados, comestíveis e acessórios. Peça direto pelo WhatsApp, 24h." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ---- Catálogo ---- */
+    .page-hero { padding: 56px 0 28px; position: relative; overflow: hidden; }
+    .page-hero__glow {
+      position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
+      width: 720px; height: 720px; max-width: 120vw;
+      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 62%);
+      pointer-events: none; z-index: 0;
+    }
+    .page-hero .wrap { position: relative; z-index: 1; }
+    .page-hero h1 {
+      font-family: var(--font-display); font-weight: 700; letter-spacing: -0.04em;
+      line-height: 0.98; font-size: clamp(2.4rem, 8vw, 4.5rem); margin: 16px 0 12px;
+    }
+    .page-hero h1 .accent { color: var(--accent); text-shadow: 0 0 60px color-mix(in srgb, var(--accent) 50%, transparent); }
+    .page-hero__tag { color: var(--fg-dim); font-size: clamp(1rem, 2.4vw, 1.25rem); max-width: 40ch; }
+
+    /* Toolbar: search + filters */
+    .toolbar { position: sticky; top: 64px; z-index: 40;
+      background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px);
+      padding: 16px 0; border-bottom: 1px solid var(--line); }
+    .search {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 12px 16px; margin-bottom: 14px;
+    }
+    .search svg { flex: 0 0 20px; color: var(--fg-dim); }
+    .search input {
+      flex: 1; background: none; border: 0; outline: none;
+      color: var(--fg); font-family: var(--font-body); font-size: 1rem;
+    }
+    .search input::placeholder { color: var(--fg-dim); }
+    .filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .filters::-webkit-scrollbar { display: none; }
+    .chip {
+      flex: 0 0 auto; font-family: var(--font-display); font-weight: 600; font-size: 0.9rem;
+      color: var(--fg-dim); background: var(--bg-elev); border: 1px solid var(--line);
+      padding: 9px 18px; border-radius: 999px; cursor: pointer; white-space: nowrap;
+      transition: color .16s, background .16s, border-color .16s, transform .12s;
+    }
+    .chip:hover { color: var(--fg); border-color: var(--accent); }
+    .chip.active { background: var(--accent); color: #04140a; border-color: var(--accent); }
+    .chip:active { transform: translateY(1px); }
+
+    /* Product grid */
+    .catalog { padding: 32px 0 64px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .prod {
+      display: flex; flex-direction: column; position: relative;
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius-lg);
+      overflow: hidden; transition: border-color .2s, transform .2s;
+    }
+    .prod::before {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 60%);
+      opacity: 0; transition: opacity .25s; pointer-events: none;
+    }
+    .prod:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .prod:hover::before { opacity: 1; }
+    .prod__art {
+      height: 150px; display: grid; place-items: center; font-size: 3.4rem;
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%),
+        var(--bg-elev);
+      border-bottom: 1px solid var(--line); position: relative;
+    }
+    .prod__cat {
+      position: absolute; top: 12px; left: 12px;
+      font-family: var(--font-display); font-weight: 600; font-size: 0.68rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--accent-hi); background: color-mix(in srgb, var(--accent) 12%, transparent);
+      border: 1px solid var(--accent-dim); padding: 5px 10px; border-radius: 999px;
+    }
+    .prod__body { padding: 18px 18px 20px; display: flex; flex-direction: column; flex: 1; position: relative; z-index: 1; }
+    .prod__name { font-family: var(--font-display); font-weight: 600; font-size: 1.12rem; letter-spacing: -0.02em; }
+    .prod__unit { color: var(--fg-dim); font-size: 0.85rem; margin-top: 2px; }
+    .prod__foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 16px; }
+    .prod__price { font-family: var(--font-display); font-weight: 700; font-size: 1.35rem; color: var(--fg); }
+    .prod__price small { color: var(--fg-dim); font-weight: 500; font-size: 0.75rem; }
+    .prod__btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--font-display); font-weight: 600; font-size: 0.85rem;
+      background: var(--accent); color: #04140a; border: 0; cursor: pointer;
+      padding: 10px 14px; border-radius: 12px; transition: background .16s, transform .14s, box-shadow .16s;
+    }
+    .prod__btn:hover { background: var(--accent-hi); transform: translateY(-2px); box-shadow: 0 10px 26px -8px color-mix(in srgb, var(--accent) 65%, transparent); }
+    .prod__btn:active { transform: translateY(0); }
+    .prod__btn svg { flex: 0 0 16px; }
+
+    .empty { text-align: center; color: var(--fg-dim); padding: 60px 0; grid-column: 1 / -1; display: none; }
+    .empty.show { display: block; }
+
+    @media (max-width: 860px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .prod__art { height: 118px; font-size: 2.6rem; }
+      .prod__name { font-size: 1rem; }
+      .prod__price { font-size: 1.15rem; }
+      .prod__btn { padding: 9px 11px; font-size: 0.8rem; }
+    }
+    @media (max-width: 400px) { .grid { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
+
+  <!-- NAV -->
   <header class="nav">
     <div class="wrap nav__inner">
       <a href="index.html" class="brand">We<span class="dot">Thiago</span></a>
@@ -27,37 +131,134 @@
     </div>
   </header>
 
-  <main class="stub">
-    <div class="stub__glow"></div>
-    <div class="stub__inner">
-      <span class="eyebrow"><span class="pulse"></span> Catálogo</span>
-      <h1 style="margin-top:20px">O catálogo tá chegando <span class="accent">em breve.</span></h1>
-      <p>Estamos montando a vitrine completa com preços e disponibilidade em tempo real. Enquanto isso, chama no WhatsApp que a gente resolve.</p>
-      <a class="btn btn--primary" href="index.html">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
-        Voltar pra home
-      </a>
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="page-hero__glow"></div>
+    <div class="wrap">
+      <span class="eyebrow"><span class="pulse"></span> Estoque atualizado · 24h</span>
+      <h1>O que temos <span class="accent">hoje</span></h1>
+      <p class="page-hero__tag">Fresco, selecionado e pronto pra entrega. Achou? Manda no zap.</p>
     </div>
-  </main>
+  </section>
 
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="wrap">
+      <label class="search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" id="search" placeholder="Buscar produto…" aria-label="Buscar produto" />
+      </label>
+      <div class="filters" id="filters">
+        <button class="chip active" data-cat="all">Tudo</button>
+        <button class="chip" data-cat="Flores">Flores</button>
+        <button class="chip" data-cat="Concentrados">Concentrados</button>
+        <button class="chip" data-cat="Comestíveis">Comestíveis</button>
+        <button class="chip" data-cat="Acessórios">Acessórios</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATALOG -->
+  <section class="catalog">
+    <div class="wrap">
+      <div class="grid" id="grid"></div>
+      <p class="empty" id="empty">Nada encontrado por aqui. Tenta outra busca 🌿</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="wrap footer__inner">
       <small>© <span id="year"></span> WeThiago · Entregas 24h, todos os dias.</small>
-      <a class="badge" href="https://wa.me/5500000000000" target="_blank" rel="noopener">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Z"/></svg>
-        <span>Pedir no WhatsApp<small>Aberto 24h</small></span>
+      <a class="badge" href="game.html">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 9.5 15 7l1.2-1.2a3 3 0 0 0-4.2-4.2L10.7 3 6 7.7c-2 2-2 5.2 0 7.2l3 3c2 2 5.2 2 7.2 0l1.3-1.3a3 3 0 0 0 0-4.2ZM7 17l-3 3"/></svg>
+        <span>WeThiago para Android<small>App Android · em breve</small></span>
       </a>
     </div>
   </footer>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mobile menu
     const burger = document.getElementById('burger');
     const links = document.getElementById('navLinks');
     burger.addEventListener('click', () => {
       const open = links.classList.toggle('open');
       burger.setAttribute('aria-expanded', open);
     });
+
+    // ---- Product data ----
+    const WA = 'https://wa.me/5500000000000?text=Quero+';
+    const PRODUCTS = [
+      { name: 'Green Crack',      cat: 'Flores',       unit: '3,5 g',         price: '90',  emoji: '🌿' },
+      { name: 'Purple Haze',      cat: 'Flores',       unit: '3,5 g',         price: '110', emoji: '🍇' },
+      { name: 'OG Kush',          cat: 'Flores',       unit: '3,5 g',         price: '120', emoji: '🌱' },
+      { name: 'Lemon Skunk',      cat: 'Flores',       unit: '1 g',           price: '35',  emoji: '🍋' },
+      { name: 'Live Resin',       cat: 'Concentrados', unit: '1 g',           price: '160', emoji: '🍯' },
+      { name: 'Shatter Gold',     cat: 'Concentrados', unit: '1 g',           price: '140', emoji: '✨' },
+      { name: 'Bubble Hash',      cat: 'Concentrados', unit: '2 g',           price: '180', emoji: '🧊' },
+      { name: 'Gummies Tropical', cat: 'Comestíveis',  unit: '10 un · 100mg', price: '70',  emoji: '🐻' },
+      { name: 'Brownie Duplo',    cat: 'Comestíveis',  unit: '1 un · 50mg',   price: '40',  emoji: '🍫' },
+      { name: 'Mel Infusionado',  cat: 'Comestíveis',  unit: '150 ml',        price: '95',  emoji: '🍶' },
+      { name: 'Grinder Metal',    cat: 'Acessórios',   unit: '4 partes',      price: '80',  emoji: '⚙️' },
+      { name: 'Sedas King Size',  cat: 'Acessórios',   unit: '32 folhas',     price: '12',  emoji: '📄' },
+      { name: 'Piteira de Vidro', cat: 'Acessórios',   unit: '1 un',          price: '25',  emoji: '🔮' },
+      { name: 'Isqueiro Neon',    cat: 'Acessórios',   unit: '1 un',          price: '18',  emoji: '🔥' },
+    ];
+
+    const grid = document.getElementById('grid');
+    const empty = document.getElementById('empty');
+    const searchInput = document.getElementById('search');
+    let activeCat = 'all';
+    let query = '';
+
+    function render() {
+      const q = query.trim().toLowerCase();
+      const items = PRODUCTS.filter(p =>
+        (activeCat === 'all' || p.cat === activeCat) &&
+        (q === '' || p.name.toLowerCase().includes(q))
+      );
+      grid.innerHTML = items.map(p => `
+        <article class="prod">
+          <div class="prod__art">
+            <span class="prod__cat">${p.cat}</span>
+            <span aria-hidden="true">${p.emoji}</span>
+          </div>
+          <div class="prod__body">
+            <h3 class="prod__name">${p.name}</h3>
+            <span class="prod__unit">${p.unit}</span>
+            <div class="prod__foot">
+              <span class="prod__price"><small>R$</small> ${p.price}</span>
+              <button class="prod__btn" data-name="${encodeURIComponent(p.name)}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Z"/></svg>
+                Pedir
+              </button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+      empty.classList.toggle('show', items.length === 0);
+    }
+
+    grid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.prod__btn');
+      if (!btn) return;
+      window.open(WA + btn.dataset.name, '_blank', 'noopener');
+    });
+
+    document.getElementById('filters').addEventListener('click', (e) => {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeCat = chip.dataset.cat;
+      render();
+    });
+
+    searchInput.addEventListener('input', (e) => { query = e.target.value; render(); });
+
+    render();
   </script>
 </body>
 </html>

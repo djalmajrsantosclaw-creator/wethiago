@@ -3,14 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WeThiago — Game</title>
-  <meta name="description" content="WeThiago · Game · em breve." />
+  <title>WeThiago — Weed Invaders</title>
+  <meta name="description" content="Weed Invaders: o Space Invaders da WeThiago. Defenda a entrega, some pontos e bata seu recorde." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-hero { padding: 48px 0 20px; position: relative; overflow: hidden; text-align: center; }
+    .page-hero__glow {
+      position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
+      width: 720px; height: 720px; max-width: 120vw;
+      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 62%);
+      pointer-events: none; z-index: 0;
+    }
+    .page-hero .wrap { position: relative; z-index: 1; }
+    .page-hero h1 {
+      font-family: var(--font-display); font-weight: 700; letter-spacing: -0.04em;
+      line-height: 0.98; font-size: clamp(2.2rem, 7vw, 4rem); margin: 12px 0 10px;
+    }
+    .page-hero h1 .accent { color: var(--accent); text-shadow: 0 0 60px color-mix(in srgb, var(--accent) 50%, transparent); }
+    .page-hero__tag { color: var(--fg-dim); font-size: clamp(1rem, 2.4vw, 1.2rem); }
+
+    .game-wrap { padding: 8px 0 56px; }
+    .stage {
+      position: relative; max-width: 620px; margin: 0 auto;
+      border: 1px solid var(--accent-dim); border-radius: var(--radius-lg); overflow: hidden;
+      background: #000; box-shadow: 0 0 60px -20px color-mix(in srgb, var(--accent) 60%, transparent);
+    }
+    canvas { display: block; width: 100%; height: auto; background: #000; touch-action: none; }
+
+    /* Overlays */
+    .overlay {
+      position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+      background: color-mix(in srgb, #000 78%, transparent); backdrop-filter: blur(4px);
+      font-family: "Space Grotesk", monospace; padding: 24px; z-index: 2;
+    }
+    .overlay.hidden { display: none; }
+    .overlay__inner { max-width: 34ch; }
+    .overlay h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.8rem, 6vw, 2.8rem); letter-spacing: -0.03em; color: var(--accent); text-shadow: 0 0 30px color-mix(in srgb, var(--accent) 55%, transparent); }
+    .overlay p { color: var(--fg-dim); margin: 12px 0 8px; line-height: 1.6; }
+    .overlay .keys { font-family: monospace; color: var(--fg); font-size: 0.9rem; margin: 14px 0 22px; }
+    .overlay .keys b { color: var(--accent-hi); }
+    .overlay .final-score { font-family: monospace; color: var(--accent-hi); font-size: 1.2rem; margin: 8px 0 4px; }
+
+    /* HUD */
+    .hud {
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      max-width: 620px; margin: 0 auto 12px; font-family: monospace; font-size: 0.95rem;
+    }
+    .hud span { color: var(--fg-dim); }
+    .hud b { color: var(--accent); font-weight: 700; }
+
+    /* Mobile controls */
+    .controls { display: none; max-width: 620px; margin: 16px auto 0; gap: 12px; }
+    .controls button {
+      flex: 1; font-family: var(--font-display); font-weight: 700; font-size: 1.4rem;
+      background: var(--bg-card); color: var(--accent); border: 1px solid var(--accent-dim);
+      border-radius: var(--radius); padding: 18px 0; cursor: pointer; user-select: none;
+      -webkit-user-select: none; transition: background .12s, transform .1s;
+    }
+    .controls button:active { background: var(--accent-dim); transform: translateY(1px); }
+    .controls .fire { flex: 1.4; color: #04140a; background: var(--accent); border-color: var(--accent); }
+
+    @media (hover: none) and (pointer: coarse) { .controls { display: flex; } }
+    @media (max-width: 640px) { .controls { display: flex; } }
+  </style>
 </head>
 <body>
+
+  <!-- NAV -->
   <header class="nav">
     <div class="wrap nav__inner">
       <a href="index.html" class="brand">We<span class="dot">Thiago</span></a>
@@ -27,37 +89,373 @@
     </div>
   </header>
 
-  <main class="stub">
-    <div class="stub__glow"></div>
-    <div class="stub__inner">
-      <span class="eyebrow"><span class="pulse"></span> Game</span>
-      <h1 style="margin-top:20px">O game está carregando <span class="accent">em breve.</span></h1>
-      <p>Um joguinho pra passar o tempo enquanto sua entrega tá a caminho. Volta já já.</p>
-      <a class="btn btn--primary" href="index.html">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
-        Voltar pra home
-      </a>
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="page-hero__glow"></div>
+    <div class="wrap">
+      <span class="eyebrow"><span class="pulse"></span> Weed Invaders</span>
+      <h1>Weed <span class="accent">Invaders</span></h1>
+      <p class="page-hero__tag">Defenda a entrega. Detone os invasores. Bata o recorde.</p>
     </div>
-  </main>
+  </section>
 
+  <!-- GAME -->
+  <section class="game-wrap">
+    <div class="wrap">
+      <div class="hud">
+        <span>PONTOS <b id="score">0</b></span>
+        <span>VIDAS <b id="lives">3</b></span>
+        <span>RECORDE <b id="best">0</b></span>
+      </div>
+
+      <div class="stage">
+        <canvas id="game" width="620" height="620"></canvas>
+
+        <!-- Start overlay -->
+        <div class="overlay" id="ovStart">
+          <div class="overlay__inner">
+            <h2>Weed Invaders</h2>
+            <p>Os invasores estão descendo pra roubar a entrega. Segura eles!</p>
+            <p class="keys">
+              <b>← →</b> mover · <b>Espaço</b> atirar<br />
+              No celular, use os botões abaixo.
+            </p>
+            <button class="btn btn--primary" id="btnStart" style="justify-content:center">Começar</button>
+          </div>
+        </div>
+
+        <!-- End overlay -->
+        <div class="overlay hidden" id="ovEnd">
+          <div class="overlay__inner">
+            <h2 id="endTitle">Game Over</h2>
+            <p id="endMsg">Os invasores passaram.</p>
+            <p class="final-score">Pontos: <span id="endScore">0</span></p>
+            <p class="final-score" id="endBest">Recorde: 0</p>
+            <button class="btn btn--primary" id="btnRestart" style="justify-content:center;margin-top:14px">Jogar de novo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile controls -->
+      <div class="controls" id="controls">
+        <button id="btnLeft" aria-label="Esquerda">◀</button>
+        <button class="fire" id="btnFire" aria-label="Atirar">ATIRAR</button>
+        <button id="btnRight" aria-label="Direita">▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="wrap footer__inner">
       <small>© <span id="year"></span> WeThiago · Entregas 24h, todos os dias.</small>
-      <a class="badge" href="https://wa.me/5500000000000" target="_blank" rel="noopener">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Z"/></svg>
-        <span>Pedir no WhatsApp<small>Aberto 24h</small></span>
+      <a class="badge" href="catalogo.html">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13 5.4 5M7 13l-2 4h12"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg>
+        <span>Ver catálogo<small>Enquanto joga</small></span>
       </a>
     </div>
   </footer>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+    // Mobile menu
     const burger = document.getElementById('burger');
-    const links = document.getElementById('navLinks');
+    const navLinks = document.getElementById('navLinks');
     burger.addEventListener('click', () => {
-      const open = links.classList.toggle('open');
+      const open = navLinks.classList.toggle('open');
       burger.setAttribute('aria-expanded', open);
     });
+
+    // ============ WEED INVADERS ============
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    const bestEl  = document.getElementById('best');
+    const ovStart = document.getElementById('ovStart');
+    const ovEnd   = document.getElementById('ovEnd');
+    const endTitle = document.getElementById('endTitle');
+    const endMsg  = document.getElementById('endMsg');
+    const endScore = document.getElementById('endScore');
+    const endBest = document.getElementById('endBest');
+
+    const GREEN = '#22c55e';
+    const GREEN_HI = '#4ade80';
+
+    let best = +(localStorage.getItem('wethiago_invaders_best') || 0);
+    bestEl.textContent = best;
+
+    // ---- Audio (simple beeps) ----
+    let audioCtx = null;
+    function beep(freq, dur, type = 'square', vol = 0.05) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = type; o.frequency.value = freq;
+        g.gain.value = vol;
+        o.connect(g); g.connect(audioCtx.destination);
+        const t = audioCtx.currentTime;
+        o.start(t);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        o.stop(t + dur);
+      } catch (e) {}
+    }
+    const sndLaser = () => beep(880, 0.08, 'square', 0.04);
+    const sndBoom  = () => { beep(120, 0.18, 'sawtooth', 0.06); beep(80, 0.22, 'square', 0.04); };
+    const sndHit   = () => beep(200, 0.25, 'sawtooth', 0.07);
+    const sndOver  = () => { beep(300, 0.2, 'square', 0.06); setTimeout(() => beep(200, 0.25, 'square', 0.06), 160); setTimeout(() => beep(120, 0.4, 'square', 0.06), 340); };
+    const sndWin   = () => { [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => beep(f, 0.14, 'square', 0.06), i * 130)); };
+
+    // ---- State ----
+    let state = 'idle'; // idle | playing | over | won
+    let player, bullets, enemyBullets, enemies, keys, score, lives;
+    let enemyDir, enemyStep, enemyTimer, enemyInterval, lastShot, animId, wobble;
+
+    const EROWS = 3, ECOLS = 8;
+    const EMOJIS = ['👾', '🌿', '👽']; // per row
+
+    function reset() {
+      player = { x: W / 2 - 22, y: H - 54, w: 44, h: 20, speed: 6 };
+      bullets = [];
+      enemyBullets = [];
+      enemies = [];
+      keys = { left: false, right: false, fire: false };
+      score = 0; lives = 3;
+      enemyDir = 1; enemyStep = 14; enemyInterval = 46; enemyTimer = 0;
+      lastShot = 0; wobble = 0;
+
+      const ew = 40, eh = 32, gapX = 24, gapY = 22;
+      const totalW = ECOLS * ew + (ECOLS - 1) * gapX;
+      const startX = (W - totalW) / 2;
+      const startY = 70;
+      for (let r = 0; r < EROWS; r++) {
+        for (let c = 0; c < ECOLS; c++) {
+          enemies.push({
+            x: startX + c * (ew + gapX),
+            y: startY + r * (eh + gapY),
+            w: ew, h: eh, row: r, alive: true,
+            points: (EROWS - r) * 10
+          });
+        }
+      }
+      updateHud();
+    }
+
+    function updateHud() {
+      scoreEl.textContent = score;
+      livesEl.textContent = lives;
+      bestEl.textContent = best;
+    }
+
+    function start() {
+      reset();
+      state = 'playing';
+      ovStart.classList.add('hidden');
+      ovEnd.classList.add('hidden');
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      cancelAnimationFrame(animId);
+      loop();
+    }
+
+    function endGame(won) {
+      state = won ? 'won' : 'over';
+      if (score > best) { best = score; localStorage.setItem('wethiago_invaders_best', best); }
+      updateHud();
+      endTitle.textContent = won ? 'Você ganhou! 🎉' : 'Game Over';
+      endMsg.textContent = won ? 'Entrega salva. Os invasores foram detonados!' : 'Os invasores passaram. Tenta de novo!';
+      endScore.textContent = score;
+      endBest.textContent = 'Recorde: ' + best;
+      ovEnd.classList.remove('hidden');
+      won ? sndWin() : sndOver();
+    }
+
+    function fire() {
+      const now = performance.now();
+      if (now - lastShot < 320) return;
+      lastShot = now;
+      bullets.push({ x: player.x + player.w / 2 - 2, y: player.y - 10, w: 4, h: 14, speed: 9 });
+      sndLaser();
+    }
+
+    function enemyShoot() {
+      const alive = enemies.filter(e => e.alive);
+      if (!alive.length) return;
+      // shoot from a random front-column enemy
+      const shooter = alive[Math.floor(Math.random() * alive.length)];
+      enemyBullets.push({ x: shooter.x + shooter.w / 2 - 2, y: shooter.y + shooter.h, w: 4, h: 12, speed: 4 });
+    }
+
+    function update() {
+      wobble += 0.08;
+      // player move
+      if (keys.left)  player.x -= player.speed;
+      if (keys.right) player.x += player.speed;
+      player.x = Math.max(8, Math.min(W - player.w - 8, player.x));
+      if (keys.fire) fire();
+
+      // bullets up
+      bullets.forEach(b => b.y -= b.speed);
+      bullets = bullets.filter(b => b.y + b.h > 0);
+
+      // enemy bullets down
+      enemyBullets.forEach(b => b.y += b.speed);
+      enemyBullets = enemyBullets.filter(b => b.y < H);
+
+      // enemy march
+      enemyTimer++;
+      const aliveEnemies = enemies.filter(e => e.alive);
+      const aliveCount = aliveEnemies.length;
+      // speed up as fewer remain
+      const interval = Math.max(10, enemyInterval - (ECOLS * EROWS - aliveCount) * 1.2);
+      if (enemyTimer >= interval) {
+        enemyTimer = 0;
+        let hitEdge = false;
+        const minX = Math.min(...aliveEnemies.map(e => e.x));
+        const maxX = Math.max(...aliveEnemies.map(e => e.x + e.w));
+        if ((enemyDir > 0 && maxX + enemyStep > W - 8) || (enemyDir < 0 && minX - enemyStep < 8)) {
+          hitEdge = true;
+        }
+        if (hitEdge) {
+          enemies.forEach(e => e.y += 20);
+          enemyDir *= -1;
+          beep(160, 0.05, 'square', 0.03);
+        } else {
+          enemies.forEach(e => e.x += enemyStep * enemyDir);
+        }
+        // random enemy shooting tied to march
+        if (Math.random() < 0.5) enemyShoot();
+      }
+
+      // collisions: player bullets vs enemies
+      bullets.forEach(b => {
+        enemies.forEach(e => {
+          if (e.alive && b.x < e.x + e.w && b.x + b.w > e.x && b.y < e.y + e.h && b.y + b.h > e.y) {
+            e.alive = false; b.dead = true;
+            score += e.points;
+            sndBoom();
+          }
+        });
+      });
+      bullets = bullets.filter(b => !b.dead);
+
+      // enemy bullets vs player
+      enemyBullets.forEach(b => {
+        if (b.x < player.x + player.w && b.x + b.w > player.x && b.y < player.y + player.h && b.y + b.h > player.y) {
+          b.dead = true;
+          lives--;
+          sndHit();
+          updateHud();
+          if (lives <= 0) endGame(false);
+        }
+      });
+      enemyBullets = enemyBullets.filter(b => !b.dead);
+
+      updateHud();
+
+      // win?
+      if (enemies.every(e => !e.alive)) { endGame(true); return; }
+
+      // lose if enemies reach player line
+      if (aliveEnemies.some(e => e.y + e.h >= player.y - 6)) { endGame(false); return; }
+    }
+
+    // ---- Drawing ----
+    function drawStars() {
+      ctx.fillStyle = 'rgba(34,197,94,0.14)';
+      for (let i = 0; i < 40; i++) {
+        const x = (i * 97) % W;
+        const y = (i * 53 + (wobble * 8)) % H;
+        ctx.fillRect(x, y, 2, 2);
+      }
+    }
+
+    function drawPlayer() {
+      ctx.save();
+      ctx.shadowColor = GREEN; ctx.shadowBlur = 12;
+      ctx.fillStyle = GREEN;
+      const { x, y, w, h } = player;
+      // ship body
+      ctx.beginPath();
+      ctx.moveTo(x + w / 2, y);
+      ctx.lineTo(x + w, y + h);
+      ctx.lineTo(x, y + h);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillRect(x + w / 2 - 3, y - 8, 6, 8); // cannon
+      ctx.restore();
+    }
+
+    function drawEnemy(e) {
+      const t = Math.sin(wobble + e.x * 0.05) * 2;
+      ctx.font = '26px monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(EMOJIS[e.row], e.x + e.w / 2, e.y + e.h / 2 + t);
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+      drawStars();
+
+      enemies.forEach(e => { if (e.alive) drawEnemy(e); });
+      drawPlayer();
+
+      ctx.save();
+      ctx.shadowColor = GREEN_HI; ctx.shadowBlur = 8;
+      ctx.fillStyle = GREEN_HI;
+      bullets.forEach(b => ctx.fillRect(b.x, b.y, b.w, b.h));
+      ctx.restore();
+
+      ctx.fillStyle = '#f87171';
+      enemyBullets.forEach(b => ctx.fillRect(b.x, b.y, b.w, b.h));
+    }
+
+    function loop() {
+      if (state !== 'playing') return;
+      update();
+      if (state === 'playing') draw();
+      animId = requestAnimationFrame(loop);
+    }
+
+    // ---- Input ----
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'ArrowLeft')  keys.left = true;
+      if (e.code === 'ArrowRight') keys.right = true;
+      if (e.code === 'Space') { keys.fire = true; e.preventDefault(); }
+      if (e.code === 'Enter' && state !== 'playing') start();
+    });
+    document.addEventListener('keyup', (e) => {
+      if (e.code === 'ArrowLeft')  keys.left = false;
+      if (e.code === 'ArrowRight') keys.right = false;
+      if (e.code === 'Space') keys.fire = false;
+    });
+
+    document.getElementById('btnStart').addEventListener('click', start);
+    document.getElementById('btnRestart').addEventListener('click', start);
+
+    // Mobile controls
+    function bindHold(id, on, off) {
+      const el = document.getElementById(id);
+      const down = (e) => { e.preventDefault(); on(); };
+      const up = (e) => { e.preventDefault(); off(); };
+      el.addEventListener('touchstart', down, { passive: false });
+      el.addEventListener('touchend', up, { passive: false });
+      el.addEventListener('mousedown', down);
+      el.addEventListener('mouseup', up);
+      el.addEventListener('mouseleave', up);
+    }
+    // keys is reset() on start; guard with optional chaining via wrapper
+    bindHold('btnLeft',  () => { if (keys) keys.left = true; },  () => { if (keys) keys.left = false; });
+    bindHold('btnRight', () => { if (keys) keys.right = true; }, () => { if (keys) keys.right = false; });
+    bindHold('btnFire',  () => { if (keys) keys.fire = true; },  () => { if (keys) keys.fire = false; });
+
+    // initial idle frame
+    reset();
+    draw();
   </script>
 </body>
 </html>

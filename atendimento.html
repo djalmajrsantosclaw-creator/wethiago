@@ -4,13 +4,110 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WeThiago — Atendimento</title>
-  <meta name="description" content="WeThiago · Atendimento · em breve." />
+  <meta name="description" content="Atendimento WeThiago: WhatsApp, chat ao vivo e Instagram. Equipe 24h, todos os dias." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-hero { padding: 56px 0 12px; position: relative; overflow: hidden; }
+    .page-hero__glow {
+      position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
+      width: 720px; height: 720px; max-width: 120vw;
+      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 62%);
+      pointer-events: none; z-index: 0;
+    }
+    .page-hero .wrap { position: relative; z-index: 1; }
+    .page-hero h1 {
+      font-family: var(--font-display); font-weight: 700; letter-spacing: -0.04em;
+      line-height: 0.98; font-size: clamp(2.4rem, 8vw, 4.5rem); margin: 16px 0 12px;
+    }
+    .page-hero h1 .accent { color: var(--accent); text-shadow: 0 0 60px color-mix(in srgb, var(--accent) 50%, transparent); }
+    .page-hero__tag { color: var(--fg-dim); font-size: clamp(1rem, 2.4vw, 1.25rem); max-width: 40ch; }
+
+    .sub { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; font-size: clamp(1.4rem, 4vw, 2rem); margin-bottom: 20px; }
+
+    /* Channel cards */
+    .chan-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .chan-card {
+      display: flex; flex-direction: column; gap: 6px; position: relative; overflow: hidden;
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius-lg);
+      padding: 28px 24px; transition: border-color .2s, transform .2s;
+    }
+    .chan-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .chan-card__icon { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 14px; background: var(--accent-dim); color: var(--accent-hi); margin-bottom: 14px; }
+    .chan-card h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; letter-spacing: -0.02em; }
+    .chan-card p { color: var(--fg-dim); font-size: 0.92rem; }
+    .chan-card__cta { margin-top: 14px; font-weight: 600; color: var(--accent-hi); display: inline-flex; align-items: center; gap: 6px; }
+    .chan-card__cta svg { transition: transform .18s; }
+    .chan-card:hover .chan-card__cta svg { transform: translateX(4px); }
+
+    /* Hours banner */
+    .hours {
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+      padding: 32px; border-radius: var(--radius-lg); margin-top: 16px;
+      border: 1px solid var(--accent-dim);
+      background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%), var(--bg-card);
+    }
+    .hours__clock {
+      width: 64px; height: 64px; flex: 0 0 64px; border-radius: 50%;
+      display: grid; place-items: center; color: #04140a; background: var(--accent);
+      position: relative;
+    }
+    .hours__clock::after {
+      content: ""; position: absolute; inset: -6px; border-radius: 50%;
+      border: 2px solid var(--accent);
+      animation: hoursPulse 1.8s infinite;
+    }
+    @keyframes hoursPulse { 0% { transform: scale(1); opacity: .8; } 70% { transform: scale(1.35); opacity: 0; } 100% { opacity: 0; } }
+    .hours__txt h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; letter-spacing: -0.02em; }
+    .hours__txt p { color: var(--fg-dim); margin-top: 4px; }
+
+    /* Team */
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .member {
+      text-align: center; background: var(--bg-card); border: 1px solid var(--line);
+      border-radius: var(--radius-lg); padding: 28px 22px; transition: border-color .2s, transform .2s;
+    }
+    .member:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .member__avatar {
+      width: 76px; height: 76px; margin: 0 auto 16px; border-radius: 50%;
+      display: grid; place-items: center; font-size: 2.4rem;
+      background: linear-gradient(135deg, var(--accent-dim), var(--bg-elev));
+      border: 1px solid var(--accent-dim);
+    }
+    .member h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; }
+    .member__role { color: var(--accent-hi); font-size: 0.85rem; font-weight: 600; margin-top: 2px; }
+    .member p { color: var(--fg-dim); font-size: 0.9rem; margin-top: 10px; }
+
+    /* FAQ accordion */
+    .faq { display: flex; flex-direction: column; gap: 10px; max-width: 760px; }
+    .faq__item { background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: border-color .2s; }
+    .faq__item[open] { border-color: var(--accent-dim); }
+    .faq__q {
+      list-style: none; cursor: pointer; padding: 18px 20px; display: flex;
+      align-items: center; justify-content: space-between; gap: 12px;
+      font-family: var(--font-display); font-weight: 600; font-size: 1.02rem;
+    }
+    .faq__q::-webkit-details-marker { display: none; }
+    .faq__q svg { flex: 0 0 20px; color: var(--accent); transition: transform .22s; }
+    .faq__item[open] .faq__q svg { transform: rotate(45deg); }
+    .faq__a { padding: 0 20px 18px; color: var(--fg-dim); line-height: 1.6; }
+
+    .section { padding: 48px 0; }
+    .section:first-of-type { padding-top: 24px; }
+
+    @media (max-width: 860px) {
+      .chan-grid, .team-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .hours { flex-direction: row; padding: 24px; }
+    }
+  </style>
 </head>
 <body>
+
+  <!-- NAV -->
   <header class="nav">
     <div class="wrap nav__inner">
       <a href="index.html" class="brand">We<span class="dot">Thiago</span></a>
@@ -27,19 +124,136 @@
     </div>
   </header>
 
-  <main class="stub">
-    <div class="stub__glow"></div>
-    <div class="stub__inner">
-      <span class="eyebrow"><span class="pulse"></span> Atendimento</span>
-      <h1 style="margin-top:20px">Atendimento ao vivo <span class="accent">em breve.</span></h1>
-      <p>Chat em tempo real com a equipe WeThiago. Por enquanto, o WhatsApp é o caminho mais rápido — respondemos 24h.</p>
-      <a class="btn btn--primary" href="index.html">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
-        Voltar pra home
-      </a>
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="page-hero__glow"></div>
+    <div class="wrap">
+      <span class="eyebrow"><span class="pulse"></span> Online agora</span>
+      <h1>A gente resolve. <span class="accent">24h.</span></h1>
+      <p class="page-hero__tag">Escolhe o canal, manda a real, e a equipe WeThiago cuida do resto.</p>
     </div>
-  </main>
+  </section>
 
+  <!-- CHANNELS -->
+  <section class="section">
+    <div class="wrap">
+      <div class="chan-grid">
+        <a class="chan-card" href="https://wa.me/5500000000000" target="_blank" rel="noopener">
+          <div class="chan-card__icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Z"/></svg>
+          </div>
+          <h3>WhatsApp</h3>
+          <p>O caminho mais rápido. Pedido, dúvida ou status — respondemos na hora.</p>
+          <span class="chan-card__cta">Chamar agora
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+        <a class="chan-card" href="https://t.me/wethiago" target="_blank" rel="noopener">
+          <div class="chan-card__icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="m21.9 4.3-3.3 15.5c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-4.9L18 5.2c.4-.3-.1-.5-.6-.2L6.6 11.9l-4.8-1.5c-1-.3-1-1 .2-1.5L20.6 2.7c.9-.3 1.6.2 1.3 1.6Z"/></svg>
+          </div>
+          <h3>Chat ao vivo</h3>
+          <p>Atendimento em tempo real no Telegram. Novidades e drops também caem aqui.</p>
+          <span class="chan-card__cta">Abrir Telegram
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+        <a class="chan-card" href="https://www.instagram.com/wethiago" target="_blank" rel="noopener">
+          <div class="chan-card__icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg>
+          </div>
+          <h3>Instagram</h3>
+          <p>Bastidores, promos e drops primeiro pra quem segue. Chama na DM também.</p>
+          <span class="chan-card__cta">Seguir WeThiago
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOURS -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="hours">
+        <div class="hours__clock">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </div>
+        <div class="hours__txt">
+          <h3>Aberto 24h · todos os dias</h3>
+          <p>Sem horário de fechar. Domingo, feriado, madrugada — a WeThiago tá de plantão.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <h2 class="sub">Nossa equipe</h2>
+      <div class="team-grid">
+        <article class="member">
+          <div class="member__avatar" aria-hidden="true">🧑🏽‍🌾</div>
+          <h3>Thiago</h3>
+          <div class="member__role">Fundador</div>
+          <p>“Comecei isso pra entregar rápido e sem estresse. Qualidade não se negocia.”</p>
+        </article>
+        <article class="member">
+          <div class="member__avatar" aria-hidden="true">👩🏻‍💻</div>
+          <h3>Mari</h3>
+          <div class="member__role">Atendimento</div>
+          <p>“Tô no chat 24h. Se você mandou, eu já vi. Resposta rápida é comigo.”</p>
+        </article>
+        <article class="member">
+          <div class="member__avatar" aria-hidden="true">🛵</div>
+          <h3>Duda</h3>
+          <div class="member__role">Entregas</div>
+          <p>“Rota otimizada, capacete na cabeça. Sua entrega chega quentinha e no prazo.”</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <h2 class="sub">Perguntas frequentes</h2>
+      <div class="faq">
+        <details class="faq__item">
+          <summary class="faq__q">Quanto tempo demora a entrega?
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </summary>
+          <div class="faq__a">Na maioria das regiões, entre 30 e 60 minutos após a confirmação. Em horários de pico ou áreas mais distantes pode variar — a gente sempre avisa o prazo real no WhatsApp.</div>
+        </details>
+        <details class="faq__item">
+          <summary class="faq__q">Qual é a área de cobertura?
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </summary>
+          <div class="faq__a">Atendemos toda a região central e bairros próximos. Manda seu endereço no WhatsApp e confirmamos na hora se está na área — e o valor do frete, se houver.</div>
+        </details>
+        <details class="faq__item">
+          <summary class="faq__q">Quais formas de pagamento vocês aceitam?
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </summary>
+          <div class="faq__a">Pix (mais rápido), dinheiro na entrega e cartão via maquininha em pedidos selecionados. Combine tudo direto no atendimento antes de fechar o pedido.</div>
+        </details>
+        <details class="faq__item">
+          <summary class="faq__q">Como rastreio meu pedido?
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </summary>
+          <div class="faq__a">Assim que o pedido sai, a Duda avisa no WhatsApp com a estimativa de chegada. Qualquer dúvida no meio do caminho, é só responder na mesma conversa.</div>
+        </details>
+        <details class="faq__item">
+          <summary class="faq__q">E a política de privacidade?
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </summary>
+          <div class="faq__a">Discrição total. Seus dados são usados só pra concluir a entrega e nunca são compartilhados com terceiros. Embalagem neutra e sem identificação externa.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="wrap footer__inner">
       <small>© <span id="year"></span> WeThiago · Entregas 24h, todos os dias.</small>
